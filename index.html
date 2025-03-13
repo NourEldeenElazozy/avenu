@@ -308,37 +308,39 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        const urlShiha = 'img/menu-shiha.pdf';
-        const urlLabalad = 'img/menu-labalad.pdf';
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlShiha = 'img/menu-shiha.pdf';
+            const urlLabalad = 'img/menu-labalad.pdf';
 
-        function renderPDF(url, viewerId) {
-            const loadingTask = pdfjsLib.getDocument(url);
-            loadingTask.promise.then(pdf => {
-                const numPages = pdf.numPages;
-                
-                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-                    pdf.getPage(pageNum).then(page => {
-                        const scale = 1.5;
-                        const viewport = page.getViewport({ scale: scale });
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        canvas.className = 'pdf-page';
-                        document.getElementById(viewerId).appendChild(canvas);
+            function renderPDF(url, viewerId) {
+                const loadingTask = pdfjsLib.getDocument(url);
+                loadingTask.promise.then(pdf => {
+                    const numPages = pdf.numPages;
+                    
+                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                        pdf.getPage(pageNum).then(page => {
+                            const scale = 1.5;
+                            const viewport = page.getViewport({ scale: scale });
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            canvas.className = 'pdf-page';
+                            document.getElementById(viewerId).appendChild(canvas);
 
-                        const renderContext = {
-                            canvasContext: context,
-                            viewport: viewport,
-                        };
-                        page.render(renderContext);
-                    });
-                }
-            });
-        }
+                            const renderContext = {
+                                canvasContext: context,
+                                viewport: viewport,
+                            };
+                            page.render(renderContext);
+                        });
+                    }
+                });
+            }
 
-        renderPDF(urlShiha, 'pdf-viewer-shiha');
-        renderPDF(urlLabalad, 'pdf-viewer-labalad');
+            renderPDF(urlShiha, 'pdf-viewer-shiha');
+            renderPDF(urlLabalad, 'pdf-viewer-labalad');
+        });
     </script>
     
 </body>
