@@ -308,37 +308,37 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function renderPDFasImage(pdfUrl, imgId) {
-                pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-    
-                pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
-                    pdf.getPage(1).then(function(page) {
-                        var scale = 2;  // زيادة الدقة
-                        var viewport = page.getViewport({ scale: scale });
-    
-                        var canvas = document.createElement("canvas");
-                        var ctx = canvas.getContext('2d');
-                        canvas.width = viewport.width;
+        const urlShiha = 'img/menu-shiha.pdf';
+        const urlLabalad = 'img/menu-labalad.pdf';
+
+        function renderPDF(url, viewerId) {
+            const loadingTask = pdfjsLib.getDocument(url);
+            loadingTask.promise.then(pdf => {
+                const numPages = pdf.numPages;
+                
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale: scale });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
                         canvas.height = viewport.height;
-    
-                        var renderContext = {
-                            canvasContext: ctx,
-                            viewport: viewport
+                        canvas.width = viewport.width;
+                        canvas.className = 'pdf-page';
+                        document.getElementById(viewerId).appendChild(canvas);
+
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport,
                         };
-    
-                        page.render(renderContext).promise.then(function() {
-                            var img = document.getElementById(imgId);
-                            img.src = canvas.toDataURL("image/png"); // تحويل الـ PDF إلى صورة PNG
-                        });
+                        page.render(renderContext);
                     });
-                });
-            }
-    
-            // تحويل وعرض ملفات PDF كصور
-            renderPDFasImage('img/menu-shiha.pdf', 'pdfImageShiha');
-            renderPDFasImage('img/menu-labalad.pdf', 'pdfImageLabalad');
-        });
+                }
+            });
+        }
+
+        renderPDF(urlShiha, 'pdf-viewer-shiha');
+        renderPDF(urlLabalad, 'pdf-viewer-labalad');
     </script>
     
 </body>
