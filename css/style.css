@@ -162,9 +162,6 @@ h1, h2, h3, h4, h5, h6 {
     background-size: cover;
 }
 
-.hero-header img {
-    animation: imgRotate 50s linear infinite;
-}
 
 @keyframes imgRotate { 
     100% { 
